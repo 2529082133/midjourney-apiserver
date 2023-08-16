@@ -3,7 +3,7 @@ module github.com/2529082133/midjourney-apiserver
 go 1.19
 
 require (
-	github.com/2529082133/midjogurney-api v0.0.2
+	github.com/2529082133/midjourney-api v0.0.2
 	github.com/bwmarrin/discordgo v0.27.1
 	github.com/google/uuid v1.3.0
 	github.com/redis/go-redis/v9 v9.0.5
@@ -21,7 +21,5 @@ require (
 	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
-	google.golang.org/genproto v0.0.0-20230526161137-0005af68ea54 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230525234030-28d5490b6b19 // indirect
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.3.0 // indirect
 )

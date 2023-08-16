@@ -1,6 +1,6 @@
 package webhook
 
-import "github.com/hongliang5316/midjourney-apiserver/pkg/store"
+import "github.com/2529082133/midjourney-apiserver/pkg/store"
 
 type WebhookRequest struct {
 	TaskID       string       `json:"task_id"`

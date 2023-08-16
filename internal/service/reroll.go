@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/2529082133/midjourney-api/midjourney-go/midjourney"
+	"github.com/2529082133/midjourney-apiserver/pkg/api"
+	"github.com/2529082133/midjourney-apiserver/pkg/store"
 	"github.com/google/uuid"
-	"github.com/hongliang5316/midjourney-apiserver/pkg/api"
-	"github.com/hongliang5316/midjourney-apiserver/pkg/store"
 	"log"
 	"time"
 )

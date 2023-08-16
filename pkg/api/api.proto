@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "./pkg/api";
+
+import "imagine.proto";
+import "upscale.proto";
+import "describe.proto";
+import "reroll.proto";
+import "variation.proto";
+
+service APIService {
+    rpc Imagine(ImagineRequest) returns(ImagineResponse);
+    rpc Upscale(UpscaleRequest) returns(UpscaleResponse);
+    rpc Describe(DescribeRequest) returns(DescribeResponse);
+    rpc Reroll(RerollRequest) returns(RerollResponse);
+    rpc Variation(VariationRequest) returns(VariationResponse);
+}

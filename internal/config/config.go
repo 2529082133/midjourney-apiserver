@@ -14,6 +14,7 @@ type Config struct {
 }
 
 type Midjourney struct {
+	IPAddress string `yaml:"ip_address"`
 	UserToken string `yaml:"user_token"`
 	GuildID   string `yaml:"guild_id"`
 	ChannelID string `yaml:"channel_id"`

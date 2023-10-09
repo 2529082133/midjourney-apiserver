@@ -22,6 +22,7 @@ type MetaData struct {
 	CompleteMessageID string `redis:"complete_message_id"`
 	Mode              string `redis:"mode"`
 	RequestId         string `redis:"request_id"`
+	MemberId          string `redis:"member_id"`
 }
 
 func (md *MetaData) GetImageURL() (string, error) {

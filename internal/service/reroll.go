@@ -118,7 +118,7 @@ func (s *Service) Reroll(ctx context.Context, in *api.RerollRequest) (*api.Rerol
 			}, nil
 		}
 
-		if err := s.Store.SaveWebhook(ctx, msgInfo.ID, in.Webhook, in.RequestId); err != nil {
+		if err := s.Store.SaveWebhook(ctx, msgInfo.ID, in.Webhook, in.RequestId, in.MemberId); err != nil {
 			return &api.RerollResponse{
 				RequestId: in.RequestId,
 				Code:      api.Codes_CODES_SERVER_INTERNAL_ERROR,

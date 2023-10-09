@@ -7,17 +7,18 @@ option go_package = "./pkg/api";
 import "common.proto";
 
 message DescribeRequest {
-    string request_id = 1;
-    string image_url = 2;
+  string request_id = 1;
+  string image_url = 2;
+  string member_id = 3;
 }
 
 message DescribeResponse {
-    string request_id = 1;
-    Codes code = 2;
-    string msg = 3;
-    optional DescribeResponseData data = 4;
+  string request_id = 1;
+  Codes code = 2;
+  string msg = 3;
+  optional DescribeResponseData data = 4;
 }
 
 message DescribeResponseData {
-    repeated string prompts = 1;
+  repeated string prompts = 1;
 }

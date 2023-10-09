@@ -13,4 +13,5 @@ type WebhookRequest struct {
 	CompleteTime int64        `json:"complete_time"`
 	RequestId    string       `json:"request_id"`
 	ProcessRate  string       `json:"process_rate"`
+	MemberId     string       `json:"member_id"`
 }

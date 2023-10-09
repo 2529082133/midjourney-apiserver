@@ -38,6 +38,10 @@ func NewStore(config *Config) *Store {
 	}
 }
 
+func CreateKey(items ...string) string {
+	return strings.Join(items, ":")
+}
+
 type CompleteInfo struct {
 	ID          string
 	Attachments []map[string]any
@@ -100,13 +104,22 @@ func (s *Store) SaveWithComplete(ctx context.Context, completeMessageID, prompt,
 	return nil
 }
 
-func GetKey(prompt string) string {
+func GetKey(s string) string {
+	prompt := findFirstSpaceIndex(s)
 	index := strings.Index(prompt, "--")
 	if index == -1 {
 		return strings.TrimSpace(prompt)
 	}
 
 	return strings.TrimSpace(prompt[0:index])
+}
+
+func findFirstSpaceIndex(s string) string {
+	if strings.Contains(s, "http") {
+		index := strings.Index(s, " ")
+		return s[index+1:]
+	}
+	return s
 }
 
 func (s *Store) GetID(ctx context.Context, prompt string) (string, error) {
@@ -162,7 +175,7 @@ func (s *Store) CheckPrompt(ctx context.Context, prompt string) error {
 	return nil
 }
 
-func (s *Store) SaveWebhook(ctx context.Context, id, webhook, reqId string) error {
+func (s *Store) SaveWebhook(ctx context.Context, id, webhook, reqId, memberId string) error {
 	exist, err := s.Exists(ctx, id).Result()
 	if err != nil {
 		return Error{
@@ -178,6 +191,7 @@ func (s *Store) SaveWebhook(ctx context.Context, id, webhook, reqId string) erro
 	if err := s.HSet(ctx, id, map[string]any{
 		"webhook":    webhook,
 		"request_id": reqId,
+		"member_id":  memberId,
 	}).Err(); err != nil {
 		return Error{
 			Code: api.Codes_CODES_SERVER_INTERNAL_ERROR,

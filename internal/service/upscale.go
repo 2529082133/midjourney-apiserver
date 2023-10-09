@@ -119,7 +119,7 @@ func (s *Service) Upscale(ctx context.Context, in *api.UpscaleRequest) (*api.Ups
 			}, nil
 		}
 
-		if err := s.Store.SaveWebhook(ctx, msgInfo.ID, in.Webhook, in.RequestId); err != nil {
+		if err := s.Store.SaveWebhook(ctx, msgInfo.ID, in.Webhook, in.RequestId, in.MemberId); err != nil {
 			return &api.UpscaleResponse{
 				RequestId: in.RequestId,
 				Code:      api.Codes_CODES_SERVER_INTERNAL_ERROR,

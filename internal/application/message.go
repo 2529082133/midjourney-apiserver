@@ -101,6 +101,7 @@ func webhookCallback(metaData *store.MetaData) {
 		CompleteTime: metaData.CompleteTime,
 		RequestId:    metaData.RequestId,
 		ProcessRate:  metaData.ProcessRate,
+		MemberId:     metaData.MemberId,
 	}
 
 	b, _ := json.Marshal(webhookReq)

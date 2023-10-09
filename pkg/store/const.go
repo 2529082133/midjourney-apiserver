@@ -5,6 +5,7 @@ import "time"
 type (
 	Status string
 	Type   string
+	Key    string
 )
 
 const (
@@ -14,9 +15,9 @@ const (
 	StatusComplete       Status = "Complete"
 	StatusUnknown        Status = "Unknown"
 
-	TypeImagine Type = "Imagine"
-	TypeUpscale Type = "Upscale"
-	TypeUnknown Type = "Unknown"
-
-	Expired time.Duration = 3 * time.Hour
+	TypeImagine          Type          = "Imagine"
+	TypeUpscale          Type          = "Upscale"
+	TypeUnknown          Type          = "Unknown"
+	DrmMidjourneyCaptcha               = `drm:midjourney_server`
+	Expired              time.Duration = 3 * time.Hour
 )

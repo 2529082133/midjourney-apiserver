@@ -37,7 +37,9 @@ func (app *Application) handleCompleteEvent(m *discordgo.MessageCreate) {
 	c := newContent(m.Content)
 	mode := c.getMode()
 	prompt := c.getPrompt()
-
+	createKey := store.CreateKey(store.DrmMidjourneyCaptcha, app.Config.Midjourney.IPAddress)
+	app.Store.Incr(context.Background(), createKey)
+	app.Store.Expire(context.Background(), createKey, time.Minute*30)
 	if err := app.Store.SaveWithComplete(context.Background(), m.ID, prompt, mode, toJson(m.Attachments), webhookCallback); err != nil {
 		log.Printf("Call store.SaveWithComplete failed, err: %+v", err)
 		return
@@ -83,7 +85,9 @@ func (app *Application) handleEmbedErrorEvent(m *discordgo.MessageCreate) {
 
 		return
 	}
-
+	//createKey := store.CreateKey(app.Config.Midjourney.IPAddress)
+	////绘画异常处理
+	//app.Store.Incr(context.Background(), createKey)
 	ch <- service.MessageInfo{
 		ID:        m.ID,
 		StartTime: time.Now().Unix(),

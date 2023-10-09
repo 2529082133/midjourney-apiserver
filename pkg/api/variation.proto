@@ -11,6 +11,7 @@ message VariationRequest {
   int32 index = 2;
   string task_id = 3;
   string webhook = 4;
+  string member_id = 5;
 }
 
 message VariationResponse {

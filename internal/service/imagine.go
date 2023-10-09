@@ -60,7 +60,7 @@ func (s *Service) Imagine(ctx context.Context, in *api.ImagineRequest) (*api.Ima
 	}
 
 	select {
-	case <-time.After(10 * time.Second):
+	case <-time.After(15 * time.Second):
 		return &api.ImagineResponse{
 			RequestId: in.RequestId,
 			Code:      api.Codes_CODES_PROCESSING_TIMEOUT,
@@ -69,12 +69,10 @@ func (s *Service) Imagine(ctx context.Context, in *api.ImagineRequest) (*api.Ima
 	case msgInfo := <-KeyChan.Get(key):
 		if msgInfo.Error != nil {
 			code := api.Codes_CODES_SERVER_INTERNAL_ERROR
-
 			switch msgInfo.Error.Title {
 			case "Invalid parameter":
 				code = api.Codes_CODES_INVALID_PARAMETER_ERROR
 			}
-
 			return &api.ImagineResponse{
 				RequestId: in.RequestId,
 				Code:      code,
@@ -82,7 +80,7 @@ func (s *Service) Imagine(ctx context.Context, in *api.ImagineRequest) (*api.Ima
 			}, nil
 		}
 
-		if err := s.Store.SaveWebhook(ctx, msgInfo.ID, in.Webhook, in.RequestId); err != nil {
+		if err := s.Store.SaveWebhook(ctx, msgInfo.ID, in.Webhook, in.RequestId, in.MemberId); err != nil {
 			e := err.(store.Error)
 			return &api.ImagineResponse{
 				RequestId: in.RequestId,

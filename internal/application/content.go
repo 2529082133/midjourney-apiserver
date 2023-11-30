@@ -29,6 +29,16 @@ func (c *Content) getPrompt() string {
 	return match[1]
 }
 
+func (c *Content) getIndex() string {
+	re := `#(\d+)`
+	regexp, _ := regexp.Compile(re)
+	match := regexp.FindStringSubmatch(c.Inner)
+	if len(match) > 1 {
+		return match[1]
+	}
+	return ""
+}
+
 func (c *Content) getProcessRate() string {
 	index := strings.LastIndex(c.Inner, "(")
 	if index == -1 {

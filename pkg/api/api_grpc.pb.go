@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	APIService_Imagine_FullMethodName   = "/api.APIService/Imagine"
-	APIService_Upscale_FullMethodName   = "/api.APIService/Upscale"
-	APIService_Describe_FullMethodName  = "/api.APIService/Describe"
-	APIService_Reroll_FullMethodName    = "/api.APIService/Reroll"
-	APIService_Variation_FullMethodName = "/api.APIService/Variation"
+	APIService_Imagine_FullMethodName      = "/api.APIService/Imagine"
+	APIService_Upscale_FullMethodName      = "/api.APIService/Upscale"
+	APIService_UpscaleXFour_FullMethodName = "/api.APIService/UpscaleXFour"
+	APIService_Describe_FullMethodName     = "/api.APIService/Describe"
+	APIService_Reroll_FullMethodName       = "/api.APIService/Reroll"
+	APIService_Variation_FullMethodName    = "/api.APIService/Variation"
 )
 
 // APIServiceClient is the client API for APIService service.
@@ -32,6 +33,7 @@ const (
 type APIServiceClient interface {
 	Imagine(ctx context.Context, in *ImagineRequest, opts ...grpc.CallOption) (*ImagineResponse, error)
 	Upscale(ctx context.Context, in *UpscaleRequest, opts ...grpc.CallOption) (*UpscaleResponse, error)
+	UpscaleXFour(ctx context.Context, in *UpscaleXFourRequest, opts ...grpc.CallOption) (*UpscaleXFourResponse, error)
 	Describe(ctx context.Context, in *DescribeRequest, opts ...grpc.CallOption) (*DescribeResponse, error)
 	Reroll(ctx context.Context, in *RerollRequest, opts ...grpc.CallOption) (*RerollResponse, error)
 	Variation(ctx context.Context, in *VariationRequest, opts ...grpc.CallOption) (*VariationResponse, error)
@@ -57,6 +59,15 @@ func (c *aPIServiceClient) Imagine(ctx context.Context, in *ImagineRequest, opts
 func (c *aPIServiceClient) Upscale(ctx context.Context, in *UpscaleRequest, opts ...grpc.CallOption) (*UpscaleResponse, error) {
 	out := new(UpscaleResponse)
 	err := c.cc.Invoke(ctx, APIService_Upscale_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIServiceClient) UpscaleXFour(ctx context.Context, in *UpscaleXFourRequest, opts ...grpc.CallOption) (*UpscaleXFourResponse, error) {
+	out := new(UpscaleXFourResponse)
+	err := c.cc.Invoke(ctx, APIService_UpscaleXFour_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -96,6 +107,7 @@ func (c *aPIServiceClient) Variation(ctx context.Context, in *VariationRequest, 
 type APIServiceServer interface {
 	Imagine(context.Context, *ImagineRequest) (*ImagineResponse, error)
 	Upscale(context.Context, *UpscaleRequest) (*UpscaleResponse, error)
+	UpscaleXFour(context.Context, *UpscaleXFourRequest) (*UpscaleXFourResponse, error)
 	Describe(context.Context, *DescribeRequest) (*DescribeResponse, error)
 	Reroll(context.Context, *RerollRequest) (*RerollResponse, error)
 	Variation(context.Context, *VariationRequest) (*VariationResponse, error)
@@ -111,6 +123,9 @@ func (UnimplementedAPIServiceServer) Imagine(context.Context, *ImagineRequest) (
 }
 func (UnimplementedAPIServiceServer) Upscale(context.Context, *UpscaleRequest) (*UpscaleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Upscale not implemented")
+}
+func (UnimplementedAPIServiceServer) UpscaleXFour(context.Context, *UpscaleXFourRequest) (*UpscaleXFourResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpscaleXFour not implemented")
 }
 func (UnimplementedAPIServiceServer) Describe(context.Context, *DescribeRequest) (*DescribeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Describe not implemented")
@@ -166,6 +181,24 @@ func _APIService_Upscale_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(APIServiceServer).Upscale(ctx, req.(*UpscaleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _APIService_UpscaleXFour_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpscaleXFourRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServiceServer).UpscaleXFour(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: APIService_UpscaleXFour_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServiceServer).UpscaleXFour(ctx, req.(*UpscaleXFourRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -238,6 +271,10 @@ var APIService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Upscale",
 			Handler:    _APIService_Upscale_Handler,
+		},
+		{
+			MethodName: "UpscaleXFour",
+			Handler:    _APIService_UpscaleXFour_Handler,
 		},
 		{
 			MethodName: "Describe",

@@ -2,13 +2,13 @@ package application
 
 import (
 	"fmt"
+	"github.com/2529082133/midjourney-apiserver/pkg/midjourney"
 	"log"
 	"net"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/2529082133/midjourney-api/midjourney-go/midjourney"
 	"github.com/2529082133/midjourney-apiserver/internal/common"
 	"github.com/2529082133/midjourney-apiserver/internal/config"
 	"github.com/2529082133/midjourney-apiserver/internal/service"

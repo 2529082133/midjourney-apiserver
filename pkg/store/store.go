@@ -47,8 +47,11 @@ type CompleteInfo struct {
 	Attachments []map[string]any
 }
 
-func (s *Store) SaveWithComplete(ctx context.Context, completeMessageID, prompt, mode, attachments string, webhookFunc func(*MetaData)) error {
+func (s *Store) SaveWithComplete(ctx context.Context, completeMessageID, prompt, index, mode, attachments string, webhookFunc func(*MetaData)) error {
 	key := GetKey(prompt)
+	if index != "" {
+		key = key + index
+	}
 	id, err := s.Get(ctx, key).Result()
 	if err != nil {
 		// not found, maybe expired or exception
@@ -205,12 +208,16 @@ func (s *Store) SaveWebhook(ctx context.Context, id, webhook, reqId, memberId st
 func (s *Store) SaveMeta(
 	ctx context.Context,
 	id,
-	prompt string,
+	prompt,
+	index string,
 	status Status,
 	typ Type,
 	start_time int64,
 ) error {
 	key := GetKey(prompt)
+	if typ == TypeUpscale {
+		key = key + index
+	}
 	if err := s.Set(ctx, key, id, Expired).Err(); err != nil {
 		return Error{
 			Code: api.Codes_CODES_SERVER_INTERNAL_ERROR,

@@ -37,10 +37,10 @@ func (app *Application) handleCompleteEvent(m *discordgo.MessageCreate) {
 	c := newContent(m.Content)
 	mode := c.getMode()
 	prompt := c.getPrompt()
+	index := c.getIndex()
 	createKey := store.CreateKey(store.DrmMidjourneyCaptcha, app.Config.Midjourney.IPAddress)
 	app.Store.Incr(context.Background(), createKey)
-	app.Store.Expire(context.Background(), createKey, time.Minute*30)
-	if err := app.Store.SaveWithComplete(context.Background(), m.ID, prompt, mode, toJson(m.Attachments), webhookCallback); err != nil {
+	if err := app.Store.SaveWithComplete(context.Background(), m.ID, prompt, index, mode, toJson(m.Attachments), webhookCallback); err != nil {
 		log.Printf("Call store.SaveWithComplete failed, err: %+v", err)
 		return
 	}
@@ -49,8 +49,10 @@ func (app *Application) handleCompleteEvent(m *discordgo.MessageCreate) {
 func (app *Application) handleEmbedErrorEvent(m *discordgo.MessageCreate) {
 	e := m.Embeds[0]
 	prefix := "/imagine "
-	if !strings.HasPrefix(e.Footer.Text, prefix) {
-		return
+	if e.Footer != nil {
+		if !strings.HasPrefix(e.Footer.Text, prefix) {
+			return
+		}
 	}
 
 	prompt := strings.Replace(e.Footer.Text, prefix, "", 1)
@@ -69,6 +71,7 @@ func (app *Application) handleEmbedErrorEvent(m *discordgo.MessageCreate) {
 			context.Background(),
 			m.ID,
 			prompt,
+			"",
 			store.StatusJobQueued,
 			store.TypeImagine,
 			startTime,
@@ -85,9 +88,9 @@ func (app *Application) handleEmbedErrorEvent(m *discordgo.MessageCreate) {
 
 		return
 	}
-	//createKey := store.CreateKey(app.Config.Midjourney.IPAddress)
-	////绘画异常处理
-	//app.Store.Incr(context.Background(), createKey)
+	createKey := store.CreateKey(app.Config.Midjourney.IPAddress)
+	//绘画异常处理
+	app.Store.Incr(context.Background(), createKey)
 	ch <- service.MessageInfo{
 		ID:        m.ID,
 		StartTime: time.Now().Unix(),
@@ -99,15 +102,16 @@ func (app *Application) handleWaitingToStartEvent(m *discordgo.MessageCreate) {
 	c := newContent(m.Content)
 	prompt := c.getPrompt()
 	key := store.GetKey(prompt)
+	index := c.getIndex()
+	typ := store.TypeImagine
+	if strings.HasPrefix(m.Content, "Upscaling image") {
+		typ = store.TypeUpscale
+		key = key + index
+	}
 
 	ch := service.KeyChan.Get(key)
 	if ch == nil { // timeout or other exception
 		return
-	}
-
-	typ := store.TypeImagine
-	if strings.HasPrefix(m.Content, "Upscaling image") {
-		typ = store.TypeUpscale
 	}
 
 	log.Printf("Waiting, type: %s, key: %s, len: %d", typ, key, len(key))
@@ -117,6 +121,7 @@ func (app *Application) handleWaitingToStartEvent(m *discordgo.MessageCreate) {
 		context.Background(),
 		m.ID,
 		prompt,
+		index,
 		store.StatusWaitingToStart,
 		typ,
 		startTime,

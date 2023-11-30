@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/2529082133/midjourney-apiserver/pkg/midjourney"
 	"log"
 	"time"
 
-	"github.com/2529082133/midjourney-api/midjourney-go/midjourney"
 	"github.com/2529082133/midjourney-apiserver/pkg/api"
 	"github.com/2529082133/midjourney-apiserver/pkg/store"
 	"github.com/google/uuid"
